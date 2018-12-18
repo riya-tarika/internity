@@ -1,47 +1,83 @@
 #include<bits/stdc++.h>
 using namespace std;
+vector<int>arr;
+int i=0;
+struct node
+{
+    int key;
+    node *left, *right;
+};
+queue<node*>q;
+node *newNode(int item)
+{
+    node *temp =  new node;
+    temp->key = item;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+node* insert(node* node, int key)
+{
+
+    if (node == NULL)
+    	return newNode(key);
+    if (key < node->key)
+        node->left  = insert(node->left, key);
+    else if (key > node->key)
+        node->right = insert(node->right, key);
+    return node;
+}
+void postOrder(node *root)
+{
+    if (root != NULL)
+    {
+        postOrder(root->left);
+        postOrder(root->right);
+        arr.push_back(root->key);
+    }
+}
+void sort_tree(node *root)
+{
+    q.push(root);
+    if(!q.empty())
+    {
+        node *temp=q.front();
+        q.pop();
+        temp->key=arr[i++];
+        if(temp->left!=NULL)
+            q.push(temp->left);
+        if(temp->right!=NULL)
+            q.push(temp->right);
+    }
+}
 int main()
 {
-	int vertex,edge;
-	cout<<"Enter number of vertexes and edges"<<endl;
-	cin>>vertex>>edge;
-	int vertexes[vertex];
-	cout<<"Enter vertexes name"<<endl;
-	for(int i=0;i<vertex;i++)
-	{
-		cin>>vertexes[i];
-	}
-	int arr[vertex][vertex];
-	cout<<"Enter 1 if edge is present between vertexes else zero"<<endl;
-	for(int i=0;i<vertex;i++)
-	{
-		for(int j=0;j<vertex;j++)
-		{
-            cout<<vertexes[i]<<"->"<<vertexes[j]<<endl;
-			cin>>arr[i][j];
-			if(arr[i][j]!=1 && arr[i][j]!=0)
-			{
-                cout<<"Enter 1 or 0"<<endl;
-                cin>>arr[i][j];
-			}
-		}
-	}
-	int count=0, count1=0, max_vertex=0;
-	for(int i=0;i<vertex;i++)
-	{
-		for(int j=0;j<vertex;j++)
-		{
-			if(arr[i][j]==1)
-				count++;
-		}
-		if(count>count1)
-		{
-			count1=count;
-			max_vertex=i;
-		}
-		count=0;
-	}
-	cout<<"node with highest number of  branch is :->"<<vertexes[max_vertex]<<endl;
-	cout<<"and the count is:->"<<count1<<endl;
-	return 0;
+    node *root = NULL;
+    int a;
+    cout<<"enter y to insert into tree"<<endl;
+    char b;
+    cin>>b;
+    cout<<"enter  value"<<endl;
+    cin>>a;
+    root = insert(root, a);
+    cout<<"enter y to insert into tree"<<endl;
+    cin>>b;
+    while(1)
+    {
+        if(b=='y')
+        {
+            cout<<"enter  value"<<endl;
+            cin>>a;
+            insert(root,a);
+        }
+        else
+        {
+            break;
+        }
+        cout<<"enter y to insert into tree"<<endl;
+        cin>>b;
+
+    }
+    postOrder(root);
+    sort_tree(root);
+    return 0;
 }
